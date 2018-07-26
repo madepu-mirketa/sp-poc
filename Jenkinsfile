@@ -1,4 +1,5 @@
 node {
+	echo "${params.story_id}"
 	stage('Salesforce build'){
 		echo "Building..."
 		def branch_name='INT'
