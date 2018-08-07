@@ -1,7 +1,7 @@
 @NonCPS
 def loop_of_sh(list) {
     list.each { item ->
-        batch "git.exe merge --no-ff origin/${item}"
+        bat "git.exe merge --no-ff origin/${item}"
     }
 }
 node {
