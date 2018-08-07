@@ -11,7 +11,7 @@ node {
 		echo "Building..."
 		def branch_name='INT'
 		checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/'+branch_name]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'LocalBranch', localBranch: branch_name]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git-madepu-mirketa', url: 'https://github.com/madepu-mirketa/sp-poc.git']]]
-		loop_of_sh(${params.branch_list})
+		loop_of_sh("${params.branch_list}")
 		bat "git.exe push origin ${branch_name}"
 	}
 	stage('Salesforce Predeploy Steps'){
