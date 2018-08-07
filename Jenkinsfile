@@ -21,10 +21,10 @@ node {
 		}
 		withCredentials([usernamePassword(credentialsId: 'git-madepu-mirketa', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
 			if(isUnix()){
-				sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/madepu-mirketa/sp-poc.git ${branch_name}"
+				sh "git push origin ${branch_name}"
 			}
 			else{
-				bat "git.exe push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/madepu-mirketa/sp-poc.git ${branch_name}"
+				bat "git.exe push origin ${branch_name}"
 			}
 		}
 	}
