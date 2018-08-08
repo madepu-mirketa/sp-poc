@@ -19,7 +19,8 @@ node {
 				bat "git.exe merge origin/${aBranch}"
 			}
 		}
-		withCredentials([usernamePassword(credentialsId: 'git-madepu-mirketa', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+		withCredentials([sshUserPrivateKey(credentialsId: 'git-madepu-mirketa', keyFileVariable: 'SSH_KEY')]) {
+		//withCredentials([usernamePassword(credentialsId: 'git-madepu-mirketa', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
 			if(isUnix()){
 				sh "git push origin ${branch_name}"
 			}
