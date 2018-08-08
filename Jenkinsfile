@@ -7,8 +7,8 @@ node {
 	stage('Salesforce build'){
 		echo "Building..."
 		def branch_name='INT'
-		def repourl='https://github.com/madepu-mirketa/sp-poc.git'
-		checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/'+branch_name]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'LocalBranch', localBranch: branch_name]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git-madepu-mirketa', url: repourl]]]
+		def repourl='github.com/madepu-mirketa/sp-poc.git'
+		checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/'+branch_name]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'LocalBranch', localBranch: branch_name]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git-madepu-mirketa', url: 'https://'+repourl]]]
 		
 		branch_list.split(',').each{ aBranch ->
 			echo "git merge origin/${aBranch}"
@@ -19,13 +19,13 @@ node {
 				bat "git.exe merge origin/${aBranch}"
 			}
 		}
-		withCredentials([sshUserPrivateKey(credentialsId: 'git-madepu-mirketa', keyFileVariable: 'SSH_KEY')]) {
-		//withCredentials([usernamePassword(credentialsId: 'git-madepu-mirketa', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+
+		withCredentials([usernamePassword(credentialsId: 'git-madepu-mirketa', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
 			if(isUnix()){
-				sh "git push origin ${branch_name}"
+				sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@${repourl} ${branch_name}"
 			}
 			else{
-				bat "git.exe push origin ${branch_name}"
+				bat "git.exe push https://${GIT_USERNAME}:${GIT_PASSWORD}@${repourl} ${branch_name}"
 			}
 		}
 	}
