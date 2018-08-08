@@ -9,7 +9,11 @@ node {
 		def branch_name='INT'
 		def repourl='github.com/madepu-mirketa/sp-poc.git'
 		checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '*/'+branch_name]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'LocalBranch', localBranch: branch_name]], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'git-madepu-mirketa', url: 'https://'+repourl]]]
-		
+		def gitPrevCommit = sh (
+		    script: 'git rev-parse HEAD',
+		    returnStdout: true
+		).trim()
+		echo "Git Commit: ${gitPrevCommit}"
 		branch_list.split(',').each{ aBranch ->
 			echo "git merge origin/${aBranch}"
 			if(isUnix()){
@@ -19,7 +23,11 @@ node {
 				bat "git.exe merge origin/${aBranch}"
 			}
 		}
-
+		def gitCommit = sh (
+		    script: 'git rev-parse HEAD',
+		    returnStdout: true
+		).trim()
+		echo "Git Commit: ${gitCommit}"
 		withCredentials([usernamePassword(credentialsId: 'git-madepu-mirketa', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
 			if(isUnix()){
 				sh "git push https://${GIT_USERNAME}:${GIT_PASSWORD}@${repourl} ${branch_name}"
@@ -28,6 +36,7 @@ node {
 				bat "git.exe push https://${GIT_USERNAME}:${GIT_PASSWORD}@${repourl} ${branch_name}"
 			}
 		}
+		sh "git diff ${gitPrevCommit} ${gitCommit}"
 	}
 	stage('Salesforce Predeploy Steps'){
 		echo "Predeploy Steps"
