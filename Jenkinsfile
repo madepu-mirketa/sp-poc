@@ -36,7 +36,7 @@ node {
 				bat "git.exe push https://${GIT_USERNAME}:${GIT_PASSWORD}@${repourl} ${branch_name}"
 			}
 		}
-		sh "git diff ${gitPrevCommit} ${gitCommit}"
+		sh "git diff-tree --no-commit-id --name-only --diff-filter=ACMRTUXB -t -r ${gitPrevCommit} ${gitCommit}"
 	}
 	stage('Salesforce Predeploy Steps'){
 		echo "Predeploy Steps"
